@@ -1,8 +1,9 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-export default class Landing extends Component {
+class Landing extends Component {
   state = {
     inputSearchTerm: '',
   };
@@ -35,3 +36,7 @@ export default class Landing extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({ searchTerm: state.searchTerm });
+
+export default connect(mapStateToProps)(Landing);
