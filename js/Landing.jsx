@@ -3,10 +3,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { setSearchTerm } from './actionCreators';
+
 class Landing extends Component {
-  state = {
-    inputSearchTerm: '',
-  };
+  constructor(props: { searchTerm: string }) {
+    super(props);
+    this.state = {
+      inputSearchTerm: '',
+    };
+  }
 
   handleInputFieldChange = e => {
     this.setState({ inputSearchTerm: e.target.value });
@@ -17,8 +22,12 @@ class Landing extends Component {
     const show = props.shows
       .filter(
         c =>
-          c.title.toLowerCase().includes(this.state.inputSearchTerm.toLowerCase()) ||
-          c.description.toLowerCase().includes(this.state.inputSearchTerm.toLowerCase()),
+          c.title
+            .toLowerCase()
+            .includes(this.state.inputSearchTerm.toLowerCase()) ||
+          c.description
+            .toLowerCase()
+            .includes(this.state.inputSearchTerm.toLowerCase()),
       )
       .pop();
     if (show) props.history.push(`/details/${show.imdbID}`);
@@ -29,7 +38,11 @@ class Landing extends Component {
       <div className="landing">
         <h1>svideo</h1>
         <form onSubmit={e => this.handleFormSubmit(e, this.props)}>
-          <input type="text" onChange={this.handleInputFieldChange} placeholder="Search" />
+          <input
+            type="text"
+            onChange={this.handleInputFieldChange}
+            placeholder="Search"
+          />
         </form>
         <Link to="/search">or Browse All</Link>
       </div>
@@ -38,5 +51,9 @@ class Landing extends Component {
 }
 
 const mapStateToProps = state => ({ searchTerm: state.searchTerm });
-
-export default connect(mapStateToProps)(Landing);
+const mapDispatchToProps = (dispatch: Function) => ({
+  handleSearchTermChange(e) {
+    dispatch(setSearchTerm(e.target.value));
+  },
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Landing);
